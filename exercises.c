@@ -41,19 +41,36 @@ debes reservar memoria para cada elemento que agregues.
 Al finalizar retorna la lista creada.
 */
 
-List* crea_lista() {
+List* crea_lista()
+{
    List* L = create_list();
+   for (int i = 1; i <= 10; i++)
+   {
+       int* num = (int*)malloc(sizeof(int));
+       *num = i;
+       list_push_back(L, num);
+   }
    return L;
 }
+
 
 /*
 Ejercicio 2.
 Crea una función que reciba una lista de enteros (int*) y 
 retorne la suma de sus elementos.
 */
-int sumaLista(List *L) {
-   return 0;
+int sumaLista(List *L) 
+{
+   int suma = 0;
+   int *dato = (int*)first(L); 
+   while (dato != NULL) 
+   { 
+       suma += *dato; 
+       dato = (int*)next(L); 
+   }
+   return suma;
 }
+
 
 /*
 Ejercicio 3.
@@ -64,9 +81,21 @@ Asume que popCurrent luego de eliminar un elemento se
 posiciona en el elemento anterior.
 */
 
-void eliminaElementos(List*L, int elem){
+void eliminaElementos(List* L, int elem) 
+{
+   int *dato = (int*)first(L); 
 
+   while (dato != NULL) 
+   {
+       if (*dato == elem) 
+       {
+           free(dato); 
+           popCurrent(L); 
+       }
+       dato = (int*)next(L); 
+   }
 }
+
 
 /*
 Ejercicio 4.
@@ -75,8 +104,22 @@ El orden de ambas pilas se debe mantener.
 Puedes usar una pila auxiliar.
 */
 
-void copia_pila(Stack* P1, Stack* P2) {
+void copia_pila(Stack* P1, Stack* P2) 
+{
+   Stack* aux = create_stack(); 
+   void* dato;
+   while ((dato = pop(P1)) != NULL) 
+   {
+       push(aux, dato);
+   }
+   while ((dato = pop(aux)) != NULL) 
+   {
+       push(P1, dato); 
+       push(P2, dato); 
+   }
+   free(aux); 
 }
+
 
 /*
 Ejercicio 5.
@@ -85,7 +128,25 @@ paraéntesis balanceados. Retorna 1 si están balanceados,
 0 en caso contrario.
 */
 
-int parentesisBalanceados(char *cadena) {
-   return 0;
+int parentesisBalanceados(char *cadena) 
+{
+   Stack* P = create_stack(); 
+   while (*cadena) 
+   { 
+       if (*cadena == '(') 
+       {
+           push(P, cadena); 
+       } else if (*cadena == ')') 
+       {
+           if (pop(P) == NULL) 
+           { 
+               free(P);
+               return 0; 
+           }
+       }
+       cadena++;
+   }
+   int balanceado = stack_is_empty(P); 
+   free(P); 
+   return balanceado;
 }
-
